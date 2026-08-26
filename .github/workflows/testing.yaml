@@ -18,6 +18,7 @@ jobs:
       environment: ${{ steps.map.outputs.environment }}
     steps:
       - name: Map branch to runner group
+      
         id: map
         run: |
           case "${{ github.base_ref }}" in
