@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       runner_group: ${{ steps.map.outputs.runner_group }}
+      
       environment: ${{ steps.map.outputs.environment }}
     steps:
       - name: Map branch to runner group
