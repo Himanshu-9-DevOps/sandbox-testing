@@ -18,6 +18,7 @@ jobs:
       environment: ${{ steps.map.outputs.environment }}
     steps:
       - name: Map branch to runner group
+      
         id: map
         run: |
           case "${{ github.base_ref }}" in
@@ -32,7 +33,7 @@ jobs:
 
   test:
     needs: set_environment
-    uses: Himanshu-9-DevOps/Himanshu-9-DevOps-sandbox-java-test/.github/workflows/java-test.yml@main
+    uses: Himanshu-9-DevOps/Himanshu-9-DevOps-sandbox-java-test/.github/workflows/java-test.yaml@main
     with:
       runner_group: ${{ needs.set_environment.outputs.runner_group }}
       environment: ${{ needs.set_environment.outputs.environment }}
