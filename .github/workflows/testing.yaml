@@ -1,0 +1,38 @@
+name: testing
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - develop2
+      - develop3
+      - qa
+      - qa2
+      - main
+
+jobs:
+  set_environment:
+    runs-on: ubuntu-latest
+    outputs:
+      runner_group: ${{ steps.map.outputs.runner_group }}
+      environment: ${{ steps.map.outputs.environment }}
+    steps:
+      - name: Map branch to runner group
+        id: map
+        run: |
+          case "${{ github.base_ref }}" in
+            develop)  echo "runner_group=dig-decomm01-de"     >> "$GITHUB_OUTPUT"; echo "environment=Development" >> "$GITHUB_OUTPUT" ;;
+            develop2) echo "runner_group=dig-decomm01-dev"    >> "$GITHUB_OUTPUT"; echo "environment=DEV2"        >> "$GITHUB_OUTPUT" ;;
+            develop3) echo "runner_group=dig-decomm01-dev"    >> "$GITHUB_OUTPUT"; echo "environment=DEV3"        >> "$GITHUB_OUTPUT" ;;
+            qa)       echo "runner_group=dig-decomm01-qa"     >> "$GITHUB_OUTPUT"; echo "environment=QA"          >> "$GITHUB_OUTPUT" ;;
+            qa2)      echo "runner_group=dig-decomm01-qa"     >> "$GITHUB_OUTPUT"; echo "environment=QA2"         >> "$GITHUB_OUTPUT" ;;
+            main)     echo "runner_group=arc-decomission-pro" >> "$GITHUB_OUTPUT"; echo "environment=PROD"        >> "$GITHUB_OUTPUT" ;;
+            *)        echo "No mapping found for branch ${{ github.base_ref }}"; exit 1 ;;
+          esac
+
+  test:
+    needs: set_environment
+    uses: Himanshu-9-DevOps/Himanshu-9-DevOps-sandbox-java-test/.github/workflows/java-test.yml@main
+    with:
+      runner_group: ${{ needs.set_environment.outputs.runner_group }}
+      environment: ${{ needs.set_environment.outputs.environment }}
